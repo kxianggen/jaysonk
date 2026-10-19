@@ -5,7 +5,7 @@ export type Pill = { label: string; tone: "blue" | "pink" | "green" | "orange" }
 
 export const site = {
   name: "Jayson Kong",
-  url: "https://jaysonk.vercel.app",
+  url: "https://jaysonkong.dev",
   title: "Jayson Kong · fresh grad building with AI",
   bio: "Jayson Kong is a fresh grad who builds things with AI, based in Kuala Lumpur.",
   description:
