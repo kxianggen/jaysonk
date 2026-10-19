@@ -17,7 +17,7 @@ export const site = {
 // Hero layout, in René Coignard's coordinate system (renecoignard.com SVG units, font = 28 units).
 // The whole hero (words + sketch) lives in one box and scales together.
 // x, y = centre of the word; r = tilt in degrees. Move a word by editing its x / y / r.
-export const heroBox = { x0: 990, y0: 702, w: 1030, h: 1048, font: 28 };
+export const heroBox = { x0: 990, y0: 696, w: 1030, h: 1054, font: 28 };
 export const heroSketch = { x: 1345, y: 1250, w: 470 }; // top-left corner + width
 
 export type HeroWord = {
@@ -32,7 +32,7 @@ export type HeroWord = {
 
 export const heroWords: HeroWord[] = [
   // links, stepping down from upper right to lower left
-  { text: "CONTACT", x: 1430, y: 752, r: -8.2, href: "#contact", target: "contact" },
+  { text: "CONTACT", x: 1405, y: 746, r: -8.2, href: "#contact", target: "contact" },
   { text: "EDUCATION", x: 1288, y: 878, r: 4.2, href: "#education", target: "education" },
   { text: "EXPERIENCE", x: 1501, y: 933, r: -17.2, href: "#experience", target: "experience", arrows: true },
   { text: "PROJECTS", x: 1327, y: 1052, r: -6, href: "#projects", target: "projects" },
@@ -58,7 +58,7 @@ export const education = [
       { label: "BSc (Hons) Computer Science", tone: "pink" },
       { label: "First Class", tone: "pink" },
     ] as Pill[],
-    body: "Dual award with Lancaster University, UK. CGPA 3.81 / 4.00, on the Dean's List for five semesters, and a Jeffrey Cheah ACE Scholarship. Coursework leaned into AI, computational intelligence, data mining and distributed systems.",
+    body: "Three years of computer science, as a dual degree with Lancaster University in the UK. I studied on a Jeffrey Cheah ACE Scholarship, made the Dean's List five times and finished with a 3.81 CGPA. By the last year, most of my classes were about AI and data.",
   },
 ];
 
@@ -82,11 +82,11 @@ export const experience: {
     preview: "/previews/exp-clickr.webp",
     previewAlt: "Clickr website homepage",
     body: [
-      "I built front-end pages for ",
+      "My first time in a proper dev team. I was the only tech intern in the KL office, building pages for ",
       { text: "DBS Bank's Annual Report 2025", href: "https://www.dbs.com/annualreports/2025/index.html" },
-      " and ",
+      " and the ",
       { text: "DBS Foundation", href: "https://www.dbs.com/foundation/index.html" },
-      ": a sticky navigation bar that reacts to scrolling, CSS animations, and layouts that match the Figma designs on every screen size. As the only technical intern in the KL office, I worked with developers in Singapore, Vietnam and Myanmar, fixed client feedback ticket by ticket, and checked staging against the live sites before each release.",
+      " website alongside developers in Singapore, Vietnam and Myanmar. Most days were about making pages look right on every screen and fixing whatever the client sent back.",
     ],
   },
   {
@@ -97,7 +97,7 @@ export const experience: {
     preview: "/previews/exp-sharkeys.webp",
     previewAlt: "Sharkeys shop page on Shopee",
     body: [
-      "I built and sold custom mechanical keyboards: 400+ orders with a 5-star rating across Shopee, Carousell and Facebook Marketplace. I ran all of it myself — customer consultations, sourcing parts from overseas, stock and marketing.",
+      "I started selling custom mechanical keyboards while studying, and it grew to 400+ orders with a 5-star rating on Shopee, Carousell and Facebook Marketplace. I did everything myself, from chatting with customers about their dream board to ordering parts from overseas.",
     ],
   },
   {
@@ -108,7 +108,7 @@ export const experience: {
     preview: "/previews/exp-talker.webp",
     previewAlt: "Talker Coffee & Chocolate on Instagram",
     body: [
-      "I worked every station, from the till to the head-barista bar: dialling in espresso, pouring latte art and logging incoming stock, during a stretch when daily sales grew by about two-thirds.",
+      "My part-time job behind the coffee bar. I worked every station, from the till to the espresso machine, poured a lot of latte art and helped keep track of stock. The shop got much busier while I was there, with daily sales up by about two-thirds.",
     ],
   },
 ];
@@ -126,8 +126,8 @@ export const projects: {
   {
     title: "FilingLens",
     dates: "Sep 2026 – Oct 2026",
-    body: "Ask questions about six chipmakers' annual reports and get answers with sources — or an honest \"not in the filings\". Accuracy rose from 0.55 to 0.77 over 15+ tested changes.",
-    note: "Free hosting: the live demo can take a minute to wake up.",
+    body: "Company annual reports run to hundreds of pages, so I made something that reads them for you. Ask a question about one of six big chip companies and it answers, showing where in the report it found it. If the answer isn't in there, it just says so.",
+    note: "It runs on free hosting, so give it a minute to wake up.",
     github: "https://github.com/kxianggen/sec-rag",
     live: "https://filinglens-wtl8.onrender.com",
     preview: "/previews/proj-filinglens.webp",
@@ -136,7 +136,7 @@ export const projects: {
   {
     title: "Sharkeys",
     dates: "May 2026 – Aug 2026",
-    body: "An AI keyboard configurator where a rule engine, not the AI, decides which parts fit — so it never recommends a build that can't exist. My final-year project, graded A+.",
+    body: "A keyboard builder for anyone who wants a custom mechanical keyboard but has no idea where to start. Describe the feel you're after, even something like \"buttery smooth\", and it picks parts that actually fit together. It grew out of my keyboard shop and became my final-year project.",
     github: "https://github.com/kxianggen/sharkeys",
     live: "https://sharkeys.vercel.app",
     preview: "/previews/proj-sharkeys.webp",
@@ -145,12 +145,12 @@ export const projects: {
   {
     title: "AI Newsletter SaaS",
     dates: "Oct 2025 – Nov 2025",
-    body: "A web app that writes personalised newsletters with the OpenAI API and sends them on a schedule in the background.",
+    body: "Your own personal newsletter. Pick the topics you care about, and AI writes you a fresh issue and sends it over on a schedule.",
     github: null,
   },
 ];
 
-export type Skill = { name: string; icon: string; tag: string; line: string };
+export type Skill = { name: string; icon: string; tag: string };
 
 export const skillFolders: { id: string; name: string; tile: string[]; items: Skill[] }[] = [
   {
@@ -159,14 +159,14 @@ export const skillFolders: { id: string; name: string; tile: string[]; items: Sk
     // first 3 = big icons, next 4 = small icons
     tile: ["python", "openai", "postgresql", "langgraph", "sql", "rag", "eval"],
     items: [
-      { name: "Python", icon: "python", tag: "LANGUAGE", line: "FilingLens' retrieval pipeline and API." },
-      { name: "SQL", icon: "sql", tag: "LANGUAGE", line: "Queries behind FilingLens and Sharkeys." },
-      { name: "PostgreSQL + pgvector", icon: "postgresql", tag: "DATABASE", line: "Vector search in FilingLens and Sharkeys." },
-      { name: "OpenAI API", icon: "openai", tag: "API", line: "Answers in FilingLens, intent reading in Sharkeys, writing in the newsletter app." },
-      { name: "LangGraph", icon: "langgraph", tag: "FRAMEWORK", line: "Sharkeys' step-by-step AI pipeline." },
-      { name: "RAG", icon: "rag", tag: "TECHNIQUE", line: "FilingLens answers only from the filings and cites them." },
-      { name: "Hybrid search", icon: "hybrid", tag: "TECHNIQUE", line: "FilingLens mixes keyword (BM25) and meaning-based search." },
-      { name: "LLM evaluation", icon: "eval", tag: "TECHNIQUE", line: "A 30-question test set and a checked AI judge for FilingLens; a 58-case suite for Sharkeys." },
+      { name: "Python", icon: "python", tag: "LANGUAGE" },
+      { name: "SQL", icon: "sql", tag: "LANGUAGE" },
+      { name: "PostgreSQL + pgvector", icon: "postgresql", tag: "DATABASE" },
+      { name: "OpenAI API", icon: "openai", tag: "API" },
+      { name: "LangGraph", icon: "langgraph", tag: "FRAMEWORK" },
+      { name: "RAG", icon: "rag", tag: "TECHNIQUE" },
+      { name: "Hybrid search", icon: "hybrid", tag: "TECHNIQUE" },
+      { name: "LLM evaluation", icon: "eval", tag: "TECHNIQUE" },
     ],
   },
   {
@@ -174,17 +174,17 @@ export const skillFolders: { id: string; name: string; tile: string[]; items: Sk
     name: "Build & Ship",
     tile: ["typescript", "react", "nextdotjs", "fastapi", "docker", "supabase", "vercel"],
     items: [
-      { name: "TypeScript", icon: "typescript", tag: "LANGUAGE", line: "Sharkeys and the newsletter app." },
-      { name: "JavaScript", icon: "javascript", tag: "LANGUAGE", line: "Front-end work at Clickr." },
-      { name: "Java", icon: "openjdk", tag: "LANGUAGE", line: "Learned and used in university coursework at Sunway." },
-      { name: "React", icon: "react", tag: "FRAMEWORK", line: "The interfaces of Sharkeys and the newsletter app." },
-      { name: "Next.js", icon: "nextdotjs", tag: "FRAMEWORK", line: "Sharkeys and the newsletter app." },
-      { name: "FastAPI", icon: "fastapi", tag: "FRAMEWORK", line: "FilingLens' backend." },
-      { name: "Supabase", icon: "supabase", tag: "DATABASE", line: "Database and login for Sharkeys; the newsletter app." },
-      { name: "Docker", icon: "docker", tag: "TOOL", line: "FilingLens is packaged and deployed in a container." },
-      { name: "Git", icon: "git", tag: "TOOL", line: "GitHub for my projects; GitLab in a three-country team at Clickr." },
-      { name: "Vercel", icon: "vercel", tag: "PLATFORM", line: "Hosts Sharkeys — and this site." },
-      { name: "Linux", icon: "linux", tag: "TOOL", line: "Learned and used in university coursework at Sunway." },
+      { name: "TypeScript", icon: "typescript", tag: "LANGUAGE" },
+      { name: "JavaScript", icon: "javascript", tag: "LANGUAGE" },
+      { name: "Java", icon: "openjdk", tag: "LANGUAGE" },
+      { name: "React", icon: "react", tag: "FRAMEWORK" },
+      { name: "Next.js", icon: "nextdotjs", tag: "FRAMEWORK" },
+      { name: "FastAPI", icon: "fastapi", tag: "FRAMEWORK" },
+      { name: "Supabase", icon: "supabase", tag: "DATABASE" },
+      { name: "Docker", icon: "docker", tag: "TOOL" },
+      { name: "Git", icon: "git", tag: "TOOL" },
+      { name: "Vercel", icon: "vercel", tag: "PLATFORM" },
+      { name: "Linux", icon: "linux", tag: "TOOL" },
     ],
   },
 ];

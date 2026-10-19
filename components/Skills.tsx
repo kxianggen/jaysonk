@@ -111,19 +111,15 @@ export default function Skills() {
                 ×
               </button>
             </div>
-            <ul className="skill-list">
+            {/* laid out like an opened phone folder: app icon, name, and what kind of thing it is */}
+            <ul className="skill-grid">
               {folder.items.map((s) => (
                 <li key={s.name} className="skill">
-                  <span className="app app-list">
-                    <Icon name={s.icon} size={24} />
+                  <span className="app app-grid" aria-hidden="true">
+                    <Icon name={s.icon} size={26} />
                   </span>
-                  <div>
-                    <p className="skill-head">
-                      <span className="skill-name">{s.name}</span>
-                      <span className="tag">{s.tag}</span>
-                    </p>
-                    <p className="skill-line">{s.line}</p>
-                  </div>
+                  <span className="skill-name">{s.name}</span>
+                  <span className="tag">{s.tag}</span>
                 </li>
               ))}
             </ul>

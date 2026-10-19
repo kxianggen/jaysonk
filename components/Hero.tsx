@@ -10,9 +10,12 @@ import { useMotion } from "@/lib/motion";
   screen readers and no-JS visitors get working links. One matter-js world decides where words
   should be; each frame we copy that onto the element as a CSS transform.
 
-  Hover / focus a link -> CONTACT hangs from its top-right corner and swings like a clock pendulum
-                          (passes through the other words, so nothing gets knocked).
-  Drag any word (mouse) -> it follows the cursor on a spring; whatever it hits starts falling.
+  Hover / focus a link -> CONTACT drops to hang straight down from its right end and swings like a
+                          clock pendulum: one second left, one second right, same height every time.
+                          The swing is scripted (not simulated) so it never wobbles; it passes through
+                          the other words, so nothing gets knocked.
+  Drag any word (mouse) -> it follows the cursor on a spring; whatever it hits starts falling. Loose
+                          words move in slow motion (PLAY_SPEED) so the knock-on is easy to watch.
   Click / tap / Enter   -> CONTACT swings ~1 s, now hitting things, then everything falls to the
                           bottom of the screen; at ~2 s the page goes to the section (RESUME opens
                           the PDF). Later clicks go straight there.
@@ -22,22 +25,27 @@ import { useMotion } from "@/lib/motion";
 const HINGE_MS = 1000;
 const GO_MS = 2000;
 const GRAVITY = 1.7;
-const SWING_TARGET = 0.46; // ~26 degrees each side of the hanging angle while hovering
+const SWING_DEG = 18; // pendulum swing each side of straight down
+const SWING_PERIOD = 2000; // ms for a full left-right-left swing (1 s each way)
+const PLAY_SPEED = 0.5; // physics speed after grabbing words (1 = real time)
+const FALL_SPEED = 0.75; // physics speed for the click-to-navigate fall
 const DRAG_SLOP = 5;
 const CAT_WORD = 0x0001;
 const CAT_EDGE = 0x0002;
 
 type Mode = "rest" | "hover" | "falling" | "fallen" | "play";
 type Rest = { cx: number; cy: number; a: number; w: number; h: number };
+// scripted pendulum: P = pivot (CONTACT's right end at rest), arm = pivot to centre, d0 = start angle
+// measured from straight down
+type Pend = { P: { x: number; y: number }; arm: number; t0: number; d0: number };
 type Sim = {
   M: typeof MatterNS;
   engine: MatterNS.Engine;
   bodies: MatterNS.Body[];
   rest: Rest[];
-  hinge: MatterNS.Constraint | null;
+  pend: Pend | null;
   drag: { c: MatterNS.Constraint; i: number } | null;
   tween: { i: number; x: number; y: number; a: number; t0: number } | null;
-  swing: { sign: number; peak: number };
   raf: number;
   calm: number;
   timers: number[];
@@ -46,6 +54,22 @@ type Sim = {
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 const restAngle = (el: HTMLElement) => parseFloat(getComputedStyle(el).getPropertyValue("--r")) || 0;
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+const smooth = (t: number) => t * t * (3 - 2 * t);
+const DOWN = -Math.PI / 2; // word hanging straight down from its right end
+const physicsSpeed = (m: Mode) => (m === "falling" || m === "fallen" ? FALL_SPEED : PLAY_SPEED);
+
+/* Pendulum angle at time t (ms since it started) and its rate (rad/ms). It starts at the resting
+   angle with zero speed, swings down through vertical and settles into a steady swing of
+   ±SWING_DEG by the end of the first second: amplitude eases from d0 to A while
+   theta = DOWN + amp * cos(wt). */
+function pendAngle(d0: number, t: number) {
+  const w = (2 * Math.PI) / SWING_PERIOD;
+  const A = (SWING_DEG * Math.PI) / 180;
+  const u = Math.min(1, t / (SWING_PERIOD / 2));
+  const amp = d0 + (A - d0) * smooth(u);
+  const dAmp = u < 1 ? ((A - d0) * 6 * u * (1 - u)) / (SWING_PERIOD / 2) : 0;
+  return { theta: DOWN + amp * Math.cos(w * t), rate: dAmp * Math.cos(w * t) - amp * w * Math.sin(w * t) };
+}
 
 export default function Hero() {
   const { motion, setMotion } = useMotion();
@@ -66,6 +90,7 @@ export default function Hero() {
   const setMode = (m: Mode) => {
     modeRef.current = m;
     stageRef.current?.setAttribute("data-phase", m);
+    if (simRef.current) simRef.current.engine.timing.timeScale = physicsSpeed(m);
   };
 
   const loadMatter = useCallback(async () => {
@@ -130,24 +155,10 @@ export default function Hero() {
       }
     }
 
-    // keep the hover pendulum at a steady clock-like swing
-    if (sim.hinge && modeRef.current === "hover") {
-      const b = sim.bodies[C];
-      // hanging from a corner, the word rests a little off vertical: its centre sits right
-      // under the hinge. Measure the swing from that resting angle.
-      const r = sim.rest[C];
-      const eq = -Math.PI / 2 + Math.atan2(r.h * 0.9, r.w);
-      let phi = b.angle - eq;
-      phi = Math.atan2(Math.sin(phi), Math.cos(phi));
-      const sign = phi > 0 ? 1 : -1;
-      sim.swing.peak = Math.max(sim.swing.peak, Math.abs(phi));
-      if (sim.swing.sign !== 0 && sign !== sim.swing.sign && sim.swing.peak > 0.02) {
-        const k = Math.min(1.12, Math.max(0.72, SWING_TARGET / sim.swing.peak));
-        M.Body.setVelocity(b, { x: b.velocity.x * k, y: b.velocity.y * k });
-        M.Body.setAngularVelocity(b, b.angularVelocity * k);
-        sim.swing.peak = 0;
-      }
-      sim.swing.sign = sign;
+    // scripted clock pendulum
+    if (sim.pend) {
+      posePend(sim, performance.now());
+      render(sim, C);
     }
 
     let moving = 0;
@@ -157,7 +168,7 @@ export default function Hero() {
       if (b.speed > 0.06 || Math.abs(b.angularVelocity) > 0.002) moving++;
     });
     sim.calm = moving === 0 ? sim.calm + 1 : 0;
-    const busy = sim.hinge || sim.drag || sim.tween || modeRef.current === "falling";
+    const busy = sim.pend || sim.drag || sim.tween || modeRef.current === "falling";
     if (!busy && sim.calm > 40) {
       sim.raf = 0; // everything settled: stop until the next interaction
       return;
@@ -183,6 +194,7 @@ export default function Hero() {
     const H = stage.clientHeight;
     const sRect = stage.getBoundingClientRect();
     const engine = M.Engine.create({ gravity: { x: 0, y: GRAVITY } });
+    engine.timing.timeScale = physicsSpeed(modeRef.current);
     const edge = { isStatic: true, label: "edge", collisionFilter: { category: CAT_EDGE, mask: CAT_WORD } };
     M.Composite.add(engine.world, [
       M.Bodies.rectangle(W / 2, H + 50, W * 3, 100, edge),
@@ -232,10 +244,9 @@ export default function Hero() {
       engine,
       bodies,
       rest,
-      hinge: null,
+      pend: null,
       drag: null,
       tween: null,
-      swing: { sign: 0, peak: 0 },
       raf: 0,
       calm: 0,
       timers: [],
@@ -247,9 +258,24 @@ export default function Hero() {
 
   /* ---------------- pendulum ---------------- */
 
+  // place CONTACT on the pendulum at time `now`, and give it the matching velocity so that
+  // anything it hits (during the click swing) gets a realistic knock, and a release looks continuous
+  function posePend(sim: Sim, now: number) {
+    const p = sim.pend!;
+    const { M } = sim;
+    const b = sim.bodies[C];
+    const { theta, rate } = pendAngle(p.d0, now - p.t0);
+    M.Body.setAngle(b, theta);
+    M.Body.setPosition(b, { x: p.P.x - p.arm * Math.cos(theta), y: p.P.y - p.arm * Math.sin(theta) });
+    // rate is per real ms; matter wants per 16.7 ms of simulated time
+    const k = (1000 / 60) / sim.engine.timing.timeScale;
+    M.Body.setAngularVelocity(b, rate * k);
+    M.Body.setVelocity(b, { x: p.arm * Math.sin(theta) * rate * k, y: -p.arm * Math.cos(theta) * rate * k });
+  }
+
   function hang() {
     const sim = ensureSim();
-    if (!sim || sim.hinge) return;
+    if (!sim || sim.pend) return;
     if (sim.tween?.i === C) {
       hoverRef.current.pendingHang = true;
       return;
@@ -258,32 +284,30 @@ export default function Hero() {
     if (!b.isStatic) return; // CONTACT has already been knocked away
     const { M } = sim;
     const r = sim.rest[C];
-    const pivot = {
-      x: r.cx + (r.w / 2) * Math.cos(r.a) + (r.h / 2) * Math.sin(r.a),
-      y: r.cy + (r.w / 2) * Math.sin(r.a) - (r.h / 2) * Math.cos(r.a),
-    };
     M.Body.setStatic(b, false);
-    b.frictionAir = 0.002;
+    b.frictionAir = 0.012;
     b.collisionFilter.mask = modeRef.current === "falling" ? CAT_WORD | CAT_EDGE : CAT_EDGE;
-    sim.hinge = M.Constraint.create({
-      pointA: pivot,
-      bodyB: b,
-      pointB: { x: pivot.x - b.position.x, y: pivot.y - b.position.y },
-      stiffness: 1,
-      damping: 0,
-      length: 0,
-    });
-    M.Composite.add(sim.engine.world, sim.hinge);
-    sim.swing = { sign: 0, peak: 0 };
+    sim.pend = {
+      P: { x: r.cx + (r.w / 2) * Math.cos(r.a), y: r.cy + (r.w / 2) * Math.sin(r.a) },
+      arm: r.w / 2,
+      t0: performance.now(),
+      d0: r.a - DOWN,
+    };
     wake();
   }
 
+  // let go of the pendulum: CONTACT keeps its current speed and becomes a normal falling word
+  const releasePend = (sim: Sim) => {
+    if (!sim.pend) return;
+    posePend(sim, performance.now());
+    sim.pend = null;
+  };
+
   const unhang = () => {
     const sim = simRef.current;
-    if (!sim || !sim.hinge || modeRef.current !== "hover") return;
+    if (!sim || !sim.pend || modeRef.current !== "hover") return;
     const { M } = sim;
-    M.Composite.remove(sim.engine.world, sim.hinge);
-    sim.hinge = null;
+    sim.pend = null;
     const b = sim.bodies[C];
     sim.tween = { i: C, x: b.position.x, y: b.position.y, a: b.angle, t0: performance.now() };
     M.Body.setStatic(b, true);
@@ -346,26 +370,22 @@ export default function Hero() {
     const sim = ensureSim();
     if (!sim) return go(targetRef.current);
     const { M } = sim;
-    const wasHanging = !!sim.hinge;
     setMode("falling");
     if (sim.tween?.i === C) {
+      // CONTACT was easing home after a hover: snap it home and swing from there
+      const r = sim.rest[C];
       sim.tween = null;
-      M.Body.setStatic(sim.bodies[C], false);
+      M.Body.setPosition(sim.bodies[C], { x: r.cx, y: r.cy });
+      M.Body.setAngle(sim.bodies[C], r.a);
     }
-    if (!wasHanging && isAtRest(sim, C)) hang();
-    const contact = sim.bodies[C];
-    contact.collisionFilter.mask = CAT_WORD | CAT_EDGE; // from now on it hits things
-    contact.frictionAir = 0.012;
-    if (wasHanging) M.Body.setAngularVelocity(contact, contact.angularVelocity * 1.4);
+    if (!sim.pend && isAtRest(sim, C)) hang();
+    sim.bodies[C].collisionFilter.mask = CAT_WORD | CAT_EDGE; // from now on it hits things
     wake();
 
-    const holdMs = sim.hinge ? HINGE_MS : 150;
+    const holdMs = sim.pend ? HINGE_MS : 150;
     sim.timers.push(
       window.setTimeout(() => {
-        if (sim.hinge) {
-          M.Composite.remove(sim.engine.world, sim.hinge);
-          sim.hinge = null;
-        }
+        releasePend(sim);
         sim.bodies
           .map((b, i) => ({ b, i }))
           .filter((x) => x.b.isStatic)
@@ -381,7 +401,7 @@ export default function Hero() {
     );
   };
 
-  const onLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, word: HeroWord) => {
+  const onLinkClick = (e: React.MouseEvent<HTMLElement>, word: HeroWord) => {
     if (suppressClick.current) {
       e.preventDefault();
       suppressClick.current = false;
@@ -419,10 +439,7 @@ export default function Hero() {
       if (!sim) return;
       const { M } = sim;
       const b = sim.bodies[start.i];
-      if (start.i === C && sim.hinge) {
-        M.Composite.remove(sim.engine.world, sim.hinge);
-        sim.hinge = null;
-      }
+      if (start.i === C && sim.pend) sim.pend = null;
       if (sim.tween?.i === start.i) sim.tween = null;
       if (b.isStatic) M.Body.setStatic(b, false);
       b.collisionFilter.mask = CAT_WORD | CAT_EDGE;
@@ -433,7 +450,9 @@ export default function Hero() {
         pointA: p,
         bodyB: b,
         pointB: { x: p.x - b.position.x, y: p.y - b.position.y },
-        stiffness: 0.18,
+        // matter scales constraint strength by the physics speed; undo that so the word still
+        // keeps up with the cursor in slow motion
+        stiffness: Math.min(1, 0.18 / sim.engine.timing.timeScale),
         damping: 0.1,
         length: 0,
       });
@@ -512,6 +531,21 @@ export default function Hero() {
           style={{ left: pct(heroSketch.x - x0, BW), top: pct(heroSketch.y - y0, BH), width: pct(heroSketch.w, BW) }}
         />
         <nav className="cloud" aria-label="Sections">
+          {/* While CONTACT swings it slides out from under the cursor. This invisible copy stays at
+              its resting spot so hovering / clicking there keeps working instead of flickering. */}
+          {C >= 0 && (
+            <span
+              className="word contact-ghost"
+              aria-hidden="true"
+              style={{ left: pct(heroWords[C].x - x0, BW), top: pct(heroWords[C].y - y0, BH), "--r": `${heroWords[C].r}deg` } as React.CSSProperties}
+              onClick={(e) => onLinkClick(e, heroWords[C])}
+              onPointerDown={(e) => onPointerDown(e, C)}
+              onPointerEnter={onEnter}
+              onPointerLeave={onLeave}
+            >
+              {heroWords[C].text}
+            </span>
+          )}
           {heroWords.map((w, i) => {
             const style = {
               left: pct(w.x - x0, BW),
@@ -540,7 +574,7 @@ export default function Hero() {
                 key={i}
                 ref={ref}
                 href={w.href}
-                className="word link"
+                className={`word link${i === C ? " is-contact" : ""}`}
                 style={style}
                 draggable={false}
                 onClick={(e) => onLinkClick(e, w)}
