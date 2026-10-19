@@ -1,6 +1,6 @@
 # jaysonk — Jayson Kong's portfolio
 
-One-page portfolio: a pencil-sketch hero whose words swing and fall when you click a link,
+One-page portfolio: a line-drawing hero whose words swing and fall when you click a link,
 then Education, Experience, Projects, Skills and Certifications.
 
 Built with Next.js, matter-js (word physics), Geist fonts and Simple Icons. Hosted on Vercel.
@@ -15,7 +15,7 @@ Placeholders to fill in later:
 - `certifications` → each `href: null` → the certificate URL; add `date` when you have it.
   When the IBM certificate is issued, remove its "Expected" pill and add the date.
 
-Images live in `public/`: `hero-sketch-*.webp`, `previews/*.webp` (hover previews),
+Images live in `public/`: `hero-drawing.svg` (the line drawing in the hero), `previews/*.webp` (hover previews),
 `resume.pdf` (opened by the RESUME link — replace the file to update it).
 
 ## Run locally

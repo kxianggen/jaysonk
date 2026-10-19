@@ -547,12 +547,10 @@ export default function Hero() {
         <h1 className="sr-only">{site.bio}</h1>
         <img
           className="sketch"
-          src="/hero-sketch-640.webp"
-          srcSet="/hero-sketch-320.webp 320w, /hero-sketch-640.webp 640w"
-          sizes="220px"
-          width={868}
-          height={908}
-          alt="Pencil sketch of Jayson sitting cross-legged on the floor, typing on a laptop"
+          src="/hero-drawing.svg"
+          width={400}
+          height={340}
+          alt="Line drawing of Jayson wearing wired earphones, smiling at his laptop, with a cup of coffee beside it"
           fetchPriority="high"
           draggable={false}
           style={{ left: pct(heroSketch.x - x0, BW), top: pct(heroSketch.y - y0, BH), width: pct(heroSketch.w, BW) }}

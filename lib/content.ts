@@ -19,8 +19,8 @@ export const site = {
 // Hero layout, in René Coignard's coordinate system (renecoignard.com SVG units, font = 28 units).
 // The whole hero (words + sketch) lives in one box and scales together.
 // x, y = centre of the word; r = tilt in degrees. Move a word by editing its x / y / r.
-export const heroBox = { x0: 990, y0: 696, w: 1030, h: 1054, font: 28 };
-export const heroSketch = { x: 1345, y: 1250, w: 470 }; // top-left corner + width
+export const heroBox = { x0: 990, y0: 696, w: 1030, h: 984, font: 28 };
+export const heroSketch = { x: 1280, y: 1172, w: 620 }; // the drawing: top-left corner + width
 
 export type HeroWord = {
   text: string;
