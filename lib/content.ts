@@ -179,8 +179,10 @@ export const skillFolders: { id: string; name: string; tile: string[]; items: Sk
       { name: "OpenAI API", icon: "openai", tag: "API" },
       { name: "LangGraph", icon: "langgraph", tag: "FRAMEWORK" },
       { name: "RAG", icon: "rag", tag: "TECHNIQUE" },
+      { name: "Prompt engineering", icon: "prompt", tag: "TECHNIQUE" },
       { name: "Hybrid search", icon: "hybrid", tag: "TECHNIQUE" },
       { name: "LLM evaluation", icon: "eval", tag: "TECHNIQUE" },
+      { name: "MCP", icon: "mcp", tag: "PROTOCOL" },
     ],
   },
   {
@@ -198,6 +200,7 @@ export const skillFolders: { id: string; name: string; tile: string[]; items: Sk
       { name: "Supabase", icon: "supabase", tag: "DATABASE" },
       { name: "Docker", icon: "docker", tag: "TOOL" },
       { name: "Git", icon: "git", tag: "TOOL" },
+      { name: "Claude Code", icon: "claude", tag: "TOOL" },
       { name: "Vercel", icon: "vercel", tag: "PLATFORM" },
       { name: "Linux", icon: "linux", tag: "TOOL" },
     ],

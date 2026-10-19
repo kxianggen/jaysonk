@@ -16,6 +16,8 @@ import {
   siVercel,
   siLinux,
   siGithub,
+  siClaude,
+  siModelcontextprotocol,
 } from "simple-icons";
 
 // Brand logos come from Simple Icons (CC0). Techniques without an official logo
@@ -38,6 +40,8 @@ const brand: Record<string, string> = {
   vercel: siVercel.path,
   linux: siLinux.path,
   github: siGithub.path,
+  claude: siClaude.path,
+  mcp: siModelcontextprotocol.path,
 };
 
 const drawn: Record<string, React.ReactNode> = {
@@ -73,6 +77,13 @@ const drawn: Record<string, React.ReactNode> = {
       <path d="M9 3.5V2h6v1.5" />
       <path d="M8 10l1.6 1.6L12.5 8.7M8 16l1.6 1.6 2.9-2.9" />
       <path d="M14.5 10.5h2.5M14.5 16.5h2.5" />
+    </>
+  ),
+  // chat bubble with a prompt cursor: writing instructions for a model
+  prompt: (
+    <>
+      <path d="M3.5 4.5h17v12h-9l-4.5 3.5v-3.5H3.5z" />
+      <path d="M7.5 9l2.5 1.75L7.5 12.5M12 12.5h4" />
     </>
   ),
   linkedin: (
