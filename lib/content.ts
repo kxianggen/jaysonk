@@ -17,7 +17,7 @@ export const site = {
 // Hero layout, in René Coignard's coordinate system (renecoignard.com SVG units, font = 28 units).
 // The whole hero (words + sketch) lives in one box and scales together.
 // x, y = centre of the word; r = tilt in degrees. Move a word by editing its x / y / r.
-export const heroBox = { x0: 990, y0: 630, w: 1030, h: 1120, font: 28 };
+export const heroBox = { x0: 990, y0: 702, w: 1030, h: 1048, font: 28 };
 export const heroSketch = { x: 1345, y: 1250, w: 470 }; // top-left corner + width
 
 export type HeroWord = {
@@ -32,22 +32,22 @@ export type HeroWord = {
 
 export const heroWords: HeroWord[] = [
   // links, stepping down from upper right to lower left
-  { text: "CONTACT", x: 1418, y: 680, r: -8.2, href: "#contact", target: "contact" },
-  { text: "EDUCATION", x: 1282, y: 825, r: 4.2, href: "#education", target: "education" },
+  { text: "CONTACT", x: 1430, y: 752, r: -8.2, href: "#contact", target: "contact" },
+  { text: "EDUCATION", x: 1288, y: 878, r: 4.2, href: "#education", target: "education" },
   { text: "EXPERIENCE", x: 1501, y: 933, r: -17.2, href: "#experience", target: "experience", arrows: true },
   { text: "PROJECTS", x: 1327, y: 1052, r: -6, href: "#projects", target: "projects" },
   { text: "SKILLS", x: 1224, y: 1127, r: 4.9, href: "#skills", target: "skills" },
   { text: "CERTIFICATIONS", x: 1215, y: 1200, r: -1.8, href: "#certifications", target: "certifications" },
   { text: "RESUME", x: 1072, y: 1281, r: 5.6, href: "/resume.pdf", target: "resume" },
   // bio: name, a dip, a steep kink, a long rise, then two short lines stepping down to the right
-  { text: "JAYSON", x: 1113, y: 1382, r: -10.1 },
-  { text: "KONG", x: 1226, y: 1348, r: -22.1 },
-  { text: "IS", x: 1305, y: 1398, r: -24.7 },
-  { text: "AN", x: 1367, y: 1332, r: -37.8 },
-  { text: "AI ENGINEER", x: 1558, y: 1198, r: -26.2 },
-  { text: "BASED IN", x: 1725, y: 1185, r: -15.5 },
-  { text: "KUALA", x: 1785, y: 1239, r: -15.5 },
-  { text: "LUMPUR.", x: 1906, y: 1226, r: -6.1 },
+  { text: "JAYSON", x: 1143, y: 1377, r: -10.1 },
+  { text: "KONG", x: 1256, y: 1343, r: -22.1 },
+  { text: "IS", x: 1358, y: 1358, r: -24.7 },
+  { text: "AN", x: 1404, y: 1290, r: -37.8 },
+  { text: "AI ENGINEER", x: 1533, y: 1208, r: -26.2 },
+  { text: "BASED IN", x: 1700, y: 1195, r: -15.5 },
+  { text: "KUALA", x: 1760, y: 1249, r: -15.5 },
+  { text: "LUMPUR.", x: 1881, y: 1236, r: -6.1 },
 ];
 
 export const education = [
