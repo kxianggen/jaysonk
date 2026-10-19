@@ -8,10 +8,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: "Jayson Kong — AI engineer",
+  title: site.title,
   description: site.description,
   openGraph: {
-    title: "Jayson Kong — AI engineer",
+    title: site.title,
     description: site.description,
     url: site.url,
     type: "website",

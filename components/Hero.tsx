@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type MatterNS from "matter-js";
-import { heroBox, heroSketch, heroWords, type HeroWord } from "@/lib/content";
+import { heroBox, heroSketch, heroWords, site, type HeroWord } from "@/lib/content";
 import { useMotion } from "@/lib/motion";
 
 /*
@@ -20,6 +20,9 @@ import { useMotion } from "@/lib/motion";
                           bottom of the screen; at ~2 s the page goes to the section (RESUME opens
                           the PDF). Later clicks go straight there.
   Motion off            -> none of the above; links go straight to their target.
+  "Grab me!"            -> on each page load one random word gets a speech bubble and hops now and
+                          then. Once that word is grabbed or knocked loose, the bubble goes away.
+                          Hidden on touch screens and with motion off (no dragging there).
 */
 
 const HINGE_MS = 1000;
@@ -84,6 +87,15 @@ export default function Hero() {
   const suppressClick = useRef(false);
   const motionRef = useRef(motion);
   motionRef.current = motion;
+  const [hint, setHint] = useState(-1);
+  const hintRef = useRef(-1);
+
+  // pick the "Grab me!" word after hydration so server and client HTML match
+  useEffect(() => {
+    const i = Math.floor(Math.random() * heroWords.length);
+    hintRef.current = i;
+    setHint(i);
+  }, []);
 
   const C = heroWords.findIndex((w) => w.target === "contact");
 
@@ -119,7 +131,10 @@ export default function Hero() {
       simRef.current = null;
     }
     wordRefs.current.forEach((el) => {
-      if (el) el.style.transform = "";
+      if (el) {
+        el.style.transform = "";
+        delete el.dataset.moving;
+      }
     });
     setMode("rest");
   }, []);
@@ -128,7 +143,13 @@ export default function Hero() {
     const el = wordRefs.current[i];
     const b = sim.bodies[i];
     const r = sim.rest[i];
-    if (el) el.style.transform = `translate(${b.position.x - r.cx}px, ${b.position.y - r.cy}px) rotate(${b.angle}rad)`;
+    if (!el) return;
+    el.style.transform = `translate(${b.position.x - r.cx}px, ${b.position.y - r.cy}px) rotate(${b.angle}rad)`;
+    el.dataset.moving = "";
+    // the "Grab me!" word was grabbed or knocked loose (CONTACT's hover swing doesn't count)
+    if (i === hintRef.current && !(i === C && (sim.pend || sim.tween?.i === C))) {
+      stageRef.current?.setAttribute("data-hint-done", "");
+    }
   };
 
   const tick = useCallback(() => {
@@ -149,7 +170,10 @@ export default function Hero() {
       if (t >= 1) {
         sim.tween = null;
         const el = wordRefs.current[i];
-        if (el) el.style.transform = "";
+        if (el) {
+          el.style.transform = "";
+          delete el.dataset.moving;
+        }
         if (hoverRef.current.pendingHang && hoverRef.current.count > 0) hang();
         hoverRef.current.pendingHang = false;
       }
@@ -203,10 +227,12 @@ export default function Hero() {
     ]);
     const rest: Rest[] = [];
     const bodies = wordRefs.current.map((el, i) => {
-      const box = el!.getBoundingClientRect(); // rotation keeps the centre where it is
+      // left/top place the word's centre (CSS translate -50% does the centring), and rotation keeps
+      // the centre put. Reading offsets rather than the on-screen box ignores the "Grab me!" hop.
+      const parent = (el!.offsetParent as HTMLElement).getBoundingClientRect();
       const r: Rest = {
-        cx: box.left + box.width / 2 - sRect.left,
-        cy: box.top + box.height / 2 - sRect.top,
+        cx: parent.left - sRect.left + el!.offsetLeft,
+        cy: parent.top - sRect.top + el!.offsetTop,
         a: (restAngle(el!) * Math.PI) / 180,
         w: el!.offsetWidth,
         h: el!.offsetHeight,
@@ -517,7 +543,7 @@ export default function Hero() {
       </button>
 
       <div className="hero-box" style={{ aspectRatio: `${BW} / ${BH}`, "--font": `${(heroBox.font / BW) * 100}cqw` } as React.CSSProperties}>
-        <h1 className="sr-only">Jayson Kong is an AI engineer based in Kuala Lumpur.</h1>
+        <h1 className="sr-only">{site.bio}</h1>
         <img
           className="sketch"
           src="/hero-sketch-640.webp"
@@ -551,21 +577,31 @@ export default function Hero() {
               left: pct(w.x - x0, BW),
               top: pct(w.y - y0, BH),
               "--r": `${w.r}deg`,
+              // how far the upright "Grab me!" bubble must sit above a tilted word to clear it
+              "--lift": `${(0.45 * Math.cos((w.r * Math.PI) / 180) + 2.9 * Math.abs(Math.sin((w.r * Math.PI) / 180))).toFixed(2)}em`,
             } as React.CSSProperties;
             const ref = (el: HTMLElement | null) => {
               wordRefs.current[i] = el;
             };
+            const bubble =
+              i === hint ? (
+                <span className="hint" aria-hidden="true">
+                  Grab me!
+                </span>
+              ) : null;
+            const hintClass = i === hint ? " has-hint" : "";
             if (!w.href) {
               return (
                 <span
                   key={i}
                   ref={ref}
-                  className="word"
+                  className={`word${hintClass}`}
                   style={style}
                   aria-hidden="true"
                   onPointerDown={(e) => onPointerDown(e, i)}
                 >
                   {w.text}
+                  {bubble}
                 </span>
               );
             }
@@ -574,7 +610,7 @@ export default function Hero() {
                 key={i}
                 ref={ref}
                 href={w.href}
-                className={`word link${i === C ? " is-contact" : ""}`}
+                className={`word link${i === C ? " is-contact" : ""}${hintClass}`}
                 style={style}
                 draggable={false}
                 onClick={(e) => onLinkClick(e, w)}
@@ -601,6 +637,7 @@ export default function Hero() {
                 ) : (
                   <span className="link-text">{w.text}</span>
                 )}
+                {bubble}
               </a>
             );
           })}

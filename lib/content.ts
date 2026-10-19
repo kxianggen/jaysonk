@@ -6,8 +6,10 @@ export type Pill = { label: string; tone: "blue" | "pink" | "green" | "orange" }
 export const site = {
   name: "Jayson Kong",
   url: "https://jaysonk.vercel.app",
+  title: "Jayson Kong · fresh grad building with AI",
+  bio: "Jayson Kong is a fresh grad who builds things with AI, based in Kuala Lumpur.",
   description:
-    "Jayson Kong is an AI engineer based in Kuala Lumpur. Projects, experience and skills.",
+    "Jayson Kong is a fresh grad who builds things with AI, based in Kuala Lumpur. Projects, experience and skills.",
   email: "xianggen13@gmail.com",
   linkedin: "https://www.linkedin.com/in/xianggen/",
   github: "https://github.com/kxianggen",
@@ -40,14 +42,16 @@ export const heroWords: HeroWord[] = [
   { text: "CERTIFICATIONS", x: 1215, y: 1200, r: -1.8, href: "#certifications", target: "certifications" },
   { text: "RESUME", x: 1072, y: 1281, r: 5.6, href: "/resume.pdf", target: "resume" },
   // bio: name, a dip, a steep kink, a long rise, then two short lines stepping down to the right
-  { text: "JAYSON", x: 1143, y: 1377, r: -10.1 },
-  { text: "KONG", x: 1256, y: 1343, r: -22.1 },
-  { text: "IS", x: 1358, y: 1358, r: -24.7 },
-  { text: "AN", x: 1404, y: 1290, r: -37.8 },
-  { text: "AI ENGINEER", x: 1533, y: 1208, r: -26.2 },
-  { text: "BASED IN", x: 1700, y: 1195, r: -15.5 },
-  { text: "KUALA", x: 1760, y: 1249, r: -15.5 },
-  { text: "LUMPUR.", x: 1881, y: 1236, r: -6.1 },
+  { text: "JAYSON", x: 1100, y: 1388, r: -10.1 },
+  { text: "KONG", x: 1213, y: 1354, r: -22.1 },
+  { text: "IS A", x: 1297, y: 1386, r: -24.7 },
+  { text: "FRESH GRAD", x: 1412, y: 1304, r: -37.8 },
+  { text: "WHO BUILDS", x: 1584, y: 1198, r: -26.2 },
+  { text: "THINGS", x: 1735, y: 1138, r: -20 },
+  { text: "WITH AI,", x: 1757, y: 1230, r: -15.5 },
+  { text: "BASED IN", x: 1898, y: 1203, r: -10 },
+  { text: "KUALA", x: 1797, y: 1298, r: -15.5 },
+  { text: "LUMPUR.", x: 1926, y: 1284, r: -6.1 },
 ];
 
 export const education = [

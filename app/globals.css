@@ -151,6 +151,79 @@ img {
 .hero[data-dragging] .word {
   cursor: grabbing;
 }
+/* "Grab me!" — one random word per visit hops now and then and wears a speech bubble */
+.has-hint {
+  animation: hop 2.8s ease-in-out 1.2s infinite;
+}
+@keyframes hop {
+  0%, 60%, 100% { translate: -50% -50%; rotate: 0deg; }
+  66% { translate: -50% calc(-50% - 0.85em); rotate: -5deg; }
+  72% { translate: -50% -50%; rotate: 3deg; }
+  77% { translate: -50% calc(-50% - 0.28em); rotate: -2deg; }
+  82% { translate: -50% -50%; rotate: 0deg; }
+}
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + var(--lift, 0.45em));
+  translate: -50% 0;
+  rotate: calc(var(--r) * -1); /* stays upright while the word is tilted */
+  transform-origin: 50% 100%;
+  padding: 0.42em 0.75em;
+  border: 1px solid #d6d3d1;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text);
+  font: 500 max(11px, 0.68em) / 1 var(--sans);
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.08);
+  pointer-events: none;
+  animation: bubble-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) 700ms both;
+  transition: opacity 200ms;
+}
+.hint::after {
+  /* the little tail pointing at the word */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 7px;
+  height: 7px;
+  margin: -4px 0 0 -4px;
+  border: solid #d6d3d1;
+  border-width: 0 1px 1px 0;
+  background: #fff;
+  rotate: 45deg;
+}
+@keyframes bubble-in {
+  from { opacity: 0; scale: 0.6; }
+  to { opacity: 1; scale: 1; }
+}
+.word[data-moving].has-hint,
+.hero[data-hint-done] .has-hint {
+  animation: none;
+}
+.word[data-moving] .hint,
+.hero[data-hint-done] .hint {
+  animation: none;
+  opacity: 0;
+}
+[data-motion="off"] .has-hint {
+  animation: none;
+}
+[data-motion="off"] .hint {
+  display: none;
+}
+@media (hover: none), (pointer: coarse) {
+  .has-hint {
+    animation: none;
+  }
+  .hint {
+    display: none;
+  }
+}
+
 /* while CONTACT swings, its invisible stand-in at the resting spot takes the pointer */
 .contact-ghost {
   color: transparent;
