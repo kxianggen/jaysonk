@@ -63,7 +63,16 @@ export const education = [
       { label: "BSc (Hons) Computer Science", tone: "pink" },
       { label: "First Class", tone: "pink" },
     ] as Pill[],
-    body: "Three years of computer science, as a dual degree with Lancaster University in the UK. I studied on a Jeffrey Cheah ACE Scholarship, made the Dean's List five times and finished with a 3.81 CGPA. By the last year, most of my classes were about AI and data.",
+    body: "Three years of computer science, as a dual degree with Lancaster University in the UK. I studied on a Jeffrey Cheah ACE Scholarship, made the Dean's List five times and finished with a 3.81 CGPA.",
+    coursework: [
+      "Artificial Intelligence",
+      "Computational Intelligence",
+      "Digital Image Processing",
+      "Data Mining & Knowledge Discovery",
+      "Data Structures & Algorithms",
+      "Distributed Systems",
+      "Database Fundamentals",
+    ],
   },
 ];
 
@@ -113,7 +122,7 @@ export const experience: {
     preview: "/previews/exp-talker.webp",
     previewAlt: "Talker Coffee & Chocolate on Instagram",
     body: [
-      "My part-time job behind the coffee bar. I worked every station, from the till to the espresso machine, poured a lot of latte art and helped keep track of stock. The shop got much busier while I was there, with daily sales up by about two-thirds.",
+      "My part-time job behind the coffee bar. I worked every station, from the cashier counter to the espresso machine, poured a lot of latte art and helped keep track of stock. The shop got much busier while I was there, with daily sales up by about two-thirds.",
     ],
   },
 ];
@@ -177,12 +186,13 @@ export const skillFolders: { id: string; name: string; tile: string[]; items: Sk
   {
     id: "build-ship",
     name: "Build & Ship",
-    tile: ["typescript", "react", "nextdotjs", "fastapi", "docker", "supabase", "vercel"],
+    tile: ["typescript", "nextdotjs", "html5", "fastapi", "docker", "supabase", "vercel"],
     items: [
       { name: "TypeScript", icon: "typescript", tag: "LANGUAGE" },
       { name: "JavaScript", icon: "javascript", tag: "LANGUAGE" },
+      { name: "HTML", icon: "html5", tag: "LANGUAGE" },
+      { name: "CSS", icon: "css", tag: "LANGUAGE" },
       { name: "Java", icon: "openjdk", tag: "LANGUAGE" },
-      { name: "React", icon: "react", tag: "FRAMEWORK" },
       { name: "Next.js", icon: "nextdotjs", tag: "FRAMEWORK" },
       { name: "FastAPI", icon: "fastapi", tag: "FRAMEWORK" },
       { name: "Supabase", icon: "supabase", tag: "DATABASE" },
@@ -202,6 +212,5 @@ export const certifications: {
   href: string | null; // null = link coming soon
 }[] = [
   { title: "IBM RAG and Agentic AI Professional Certificate", issuer: "IBM", pill: { label: "Expected Oct 2026", tone: "orange" }, href: null },
-  { title: "Meta Front-End Developer Professional Certificate", issuer: "META", href: null },
   { title: "Google UX Design Professional Certificate", issuer: "GOOGLE", href: null },
 ];

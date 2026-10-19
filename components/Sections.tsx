@@ -34,6 +34,18 @@ export function Education() {
             </h3>
             <Pills pills={e.pills} />
             <p className="entry-body">{e.body}</p>
+            {e.coursework.length > 0 && (
+              <div className="coursework">
+                <h4 className="coursework-label">Relevant coursework</h4>
+                <ul className="course-list">
+                  {e.coursework.map((c) => (
+                    <li key={c} className="course">
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </li>
         ))}
       </ul>
