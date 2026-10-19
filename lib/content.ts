@@ -6,7 +6,7 @@ export type Pill = { label: string; tone: "blue" | "pink" | "green" | "orange" }
 export const site = {
   name: "Jayson Kong",
   url: "https://jaysonkong.dev",
-  title: "Jayson Kong · CS fresh grad building with AI",
+  title: "Jayson",
   bio: "Jayson Kong is a CS fresh grad who builds things with AI, based in Kuala Lumpur.",
   description:
     "Jayson Kong is a CS fresh grad who builds things with AI, based in Kuala Lumpur. Projects, experience and skills.",
