@@ -20,7 +20,7 @@ import { useMotion } from "@/lib/motion";
                           bottom of the screen; at ~2 s the page goes to the section (RESUME opens
                           the PDF). Later clicks go straight there.
   Motion off            -> none of the above; links go straight to their target.
-  "Grab me!"            -> on each page load one random word gets a speech bubble and hops now and
+  "Grab me!"            -> on each page load one random word (from those marked `hint` in content.ts) gets a speech bubble and hops now and
                           then. Once that word is grabbed or knocked loose, the bubble goes away.
                           Hidden on touch screens and with motion off (no dragging there).
 */
@@ -92,7 +92,8 @@ export default function Hero() {
 
   // pick the "Grab me!" word after hydration so server and client HTML match
   useEffect(() => {
-    const i = Math.floor(Math.random() * heroWords.length);
+    const pool = heroWords.flatMap((w, i) => (w.hint ? [i] : []));
+    const i = pool[Math.floor(Math.random() * pool.length)];
     hintRef.current = i;
     setHint(i);
   }, []);
