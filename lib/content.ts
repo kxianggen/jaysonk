@@ -14,38 +14,40 @@ export const site = {
   resume: "/resume.pdf",
 };
 
-// Hero: bio words + links. Positions are % of the word cloud box (x = left edge, y = top edge),
-// r = rotation in degrees. Edit positions to reshuffle the mess.
+// Hero layout, in René Coignard's coordinate system (renecoignard.com SVG units, font = 28 units).
+// The whole hero (words + sketch) lives in one box and scales together.
+// x, y = centre of the word; r = tilt in degrees. Move a word by editing its x / y / r.
+export const heroBox = { x0: 990, y0: 630, w: 1030, h: 1120, font: 28 };
+export const heroSketch = { x: 1345, y: 1250, w: 470 }; // top-left corner + width
+
 export type HeroWord = {
   text: string;
   x: number;
   y: number;
   r: number;
-  m?: [number, number, number]; // phone layout: x, y, r (screens under 560 px)
   href?: string;
   target?: "contact" | "education" | "experience" | "projects" | "skills" | "certifications" | "resume";
   arrows?: boolean;
 };
 
 export const heroWords: HeroWord[] = [
-  { text: "CONTACT", x: 55, y: 0, r: -7, href: "#contact", target: "contact", m: [52, 0, -7] },
-  { text: "EDUCATION", x: 41, y: 11, r: 5, href: "#education", target: "education", m: [36, 9.5, 5] },
-  { text: "EXPERIENCE", x: 21, y: 23, r: -9, href: "#experience", target: "experience", arrows: true, m: [6, 20, -8] },
-  { text: "PROJECTS", x: 38, y: 36, r: -2, href: "#projects", target: "projects", m: [31, 31, -2] },
-  { text: "SKILLS", x: 23, y: 47, r: 8, href: "#skills", target: "skills", m: [12, 41, 8] },
-  { text: "CERTIFICATIONS", x: 30, y: 58, r: -5, href: "#certifications", target: "certifications", m: [22, 50, -5] },
-  { text: "RESUME", x: 13, y: 67, r: 4, href: "/resume.pdf", target: "resume", m: [3, 59.5, 4] },
-  // bio, rising from left to right like a crooked line of type
-  { text: "JAYSON", x: 2, y: 93, r: -12, m: [1, 92, -10] },
-  { text: "KONG", x: 17, y: 90, r: -4, m: [19, 89.5, -4] },
-  { text: "IS", x: 28.5, y: 87, r: 9, m: [31.5, 87.5, 9] },
-  { text: "AN", x: 33, y: 85, r: -6, m: [37, 85.5, -6] },
-  { text: "AI", x: 39.5, y: 82, r: 11, m: [45, 83, 10] },
-  { text: "ENGINEER", x: 45, y: 79, r: -10, m: [52, 78.5, -9] },
-  { text: "BASED", x: 64, y: 73, r: -3, m: [60, 70, -5] },
-  { text: "IN", x: 77, y: 70, r: 12, m: [77, 67, 12] },
-  { text: "KUALA", x: 82, y: 64, r: -9, m: [83, 61, -8] },
-  { text: "LUMPUR.", x: 79, y: 54, r: 6, m: [75, 51, 6] },
+  // links, stepping down from upper right to lower left
+  { text: "CONTACT", x: 1418, y: 680, r: -8.2, href: "#contact", target: "contact" },
+  { text: "EDUCATION", x: 1282, y: 825, r: 4.2, href: "#education", target: "education" },
+  { text: "EXPERIENCE", x: 1501, y: 933, r: -17.2, href: "#experience", target: "experience", arrows: true },
+  { text: "PROJECTS", x: 1327, y: 1052, r: -6, href: "#projects", target: "projects" },
+  { text: "SKILLS", x: 1224, y: 1127, r: 4.9, href: "#skills", target: "skills" },
+  { text: "CERTIFICATIONS", x: 1215, y: 1200, r: -1.8, href: "#certifications", target: "certifications" },
+  { text: "RESUME", x: 1072, y: 1281, r: 5.6, href: "/resume.pdf", target: "resume" },
+  // bio: name, a dip, a steep kink, a long rise, then two short lines stepping down to the right
+  { text: "JAYSON", x: 1113, y: 1382, r: -10.1 },
+  { text: "KONG", x: 1226, y: 1348, r: -22.1 },
+  { text: "IS", x: 1305, y: 1398, r: -24.7 },
+  { text: "AN", x: 1367, y: 1332, r: -37.8 },
+  { text: "AI ENGINEER", x: 1558, y: 1198, r: -26.2 },
+  { text: "BASED IN", x: 1725, y: 1185, r: -15.5 },
+  { text: "KUALA", x: 1785, y: 1239, r: -15.5 },
+  { text: "LUMPUR.", x: 1906, y: 1226, r: -6.1 },
 ];
 
 export const education = [

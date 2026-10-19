@@ -81,16 +81,10 @@ img {
   position: relative;
   min-height: 100svh;
   display: flex;
-  overflow: hidden;
-}
-
-.hero-inner {
-  margin: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 72px 16px 6vh;
+  justify-content: center;
+  padding: 56px 8px 24px;
+  overflow: hidden;
 }
 
 .motion-toggle {
@@ -113,47 +107,49 @@ img {
   text-decoration: none;
 }
 
-.cloud {
+/* words + sketch share one box (René's coordinate system) and scale together */
+.hero-box {
   position: relative;
-  z-index: 2;
-  width: min(600px, 100%);
-  aspect-ratio: 600 / 380;
+  width: min(480px, 100%);
   container-type: inline-size;
+}
+.cloud {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
 }
 
 .word {
-  --rot: var(--r);
   position: absolute;
-  left: var(--x);
-  top: var(--y);
-  transform: rotate(var(--rot));
+  translate: -50% -50%;
+  transform: rotate(var(--r));
   transform-origin: 50% 50%;
-  padding: 1px 2px;
-  font: 700 clamp(13px, 3.15cqw, 19px) / 1.1 var(--hero);
-  letter-spacing: 0.01em;
+  padding: 0.1em 0.12em;
+  font: 700 var(--font) / 1.15 var(--hero);
+  letter-spacing: 0.005em;
   white-space: nowrap;
   color: var(--text);
   user-select: none;
+  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  cursor: grab;
 }
-.word.is-free {
-  will-change: transform;
-}
-
 .link {
   color: var(--link);
   text-decoration: none;
+  cursor: pointer;
 }
 .link-text {
   text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  text-decoration-thickness: 0.11em;
+  text-underline-offset: 0.16em;
+  text-decoration-skip-ink: none;
 }
 .link:hover .link-text {
   text-decoration: none;
 }
-.is-hinge {
-  transform-origin: 100% 0;
+.hero[data-dragging] .word {
+  cursor: grabbing;
 }
 
 .arrows {
@@ -185,12 +181,10 @@ img {
 }
 
 .sketch {
-  position: relative;
+  position: absolute;
   z-index: 1;
   display: block;
-  width: min(300px, 58vw);
   height: auto;
-  margin-top: -1%;
   pointer-events: none;
   user-select: none;
 }
@@ -632,17 +626,6 @@ a.row-link:hover .arrow {
 /* ---------------- Phone ---------------- */
 
 @media (max-width: 560px) {
-  .hero-inner {
-    padding-top: 64px;
-  }
-  .word {
-    --rot: var(--mr);
-    left: var(--mx);
-    top: var(--my);
-  }
-  .cloud {
-    aspect-ratio: 600 / 470;
-  }
   .row {
     flex-direction: column;
     gap: 10px;
