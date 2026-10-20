@@ -215,7 +215,7 @@ export const certifications: {
   href: string | null; // null = link coming soon
 }[] = [
   {
-    title: "IBM RAG and Agentic AI Specialization",
+    title: "IBM RAG and Agentic AI Professional Certificate",
     issuer: "IBM",
     date: "Oct 2026",
     href: "https://www.coursera.org/account/accomplishments/specialization/Q1NHN5R4FVMQ",
