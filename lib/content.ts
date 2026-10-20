@@ -214,6 +214,16 @@ export const certifications: {
   pill?: Pill;
   href: string | null; // null = link coming soon
 }[] = [
-  { title: "IBM RAG and Agentic AI Professional Certificate", issuer: "IBM", pill: { label: "Expected Oct 2026", tone: "orange" }, href: null },
-  { title: "Google UX Design Professional Certificate", issuer: "GOOGLE", href: null },
+  {
+    title: "IBM RAG and Agentic AI Specialization",
+    issuer: "IBM",
+    date: "Oct 2026",
+    href: "https://www.coursera.org/account/accomplishments/specialization/Q1NHN5R4FVMQ",
+  },
+  {
+    title: "Google UX Design Professional Certificate",
+    issuer: "GOOGLE",
+    date: "Sep 2025",
+    href: "https://www.coursera.org/account/accomplishments/professional-cert/certificate/IGKGH00ZZ2RD",
+  },
 ];
